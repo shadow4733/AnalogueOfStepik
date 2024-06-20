@@ -1,8 +1,8 @@
 package com.user_management_service.controller;
 
-import com.user_management_service.dto.AuthenticationRequest;
-import com.user_management_service.dto.AuthenticationResponse;
-import com.user_management_service.dto.UserRequest;
+import com.user_management_service.dto.Request.AuthenticationRequest;
+import com.user_management_service.dto.Response.AuthenticationResponse;
+import com.user_management_service.dto.Request.UserRequest;
 import com.user_management_service.exception.EmailHasNotBeenConfirmed;
 import com.user_management_service.exception.PasswordIsIncorrect;
 import com.user_management_service.exception.UsernameDoesNotExist;
