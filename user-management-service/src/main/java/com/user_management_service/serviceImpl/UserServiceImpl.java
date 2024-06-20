@@ -1,9 +1,11 @@
 package com.user_management_service.serviceImpl;
 
-import com.user_management_service.dto.AuthenticationRequest;
-import com.user_management_service.dto.AuthenticationResponse;
-import com.user_management_service.dto.UserRequest;
-import com.user_management_service.dto.UserResponse;
+import com.user_management_service.dto.Request.AuthenticationRequest;
+import com.user_management_service.dto.Request.UpdatePasswordResponse;
+import com.user_management_service.dto.Response.AuthenticationResponse;
+import com.user_management_service.dto.Request.UserRequest;
+import com.user_management_service.dto.Response.UpdatePasswordRequest;
+import com.user_management_service.dto.Response.UserResponse;
 import com.user_management_service.exception.*;
 import com.user_management_service.model.User;
 import com.user_management_service.model.enums.Role;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -88,8 +89,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUserPasswordById(UserRequest userRequest) {
-        logger.info("Password updated");
+    public UpdatePasswordResponse updateUserPasswordById(UpdatePasswordRequest updatePasswordRequest) {
+        User user = userRepository.findById(updatePasswordRequest.userId())
+                .orElseThrow(() -> new UserNotFoundException(updatePasswordRequest.userId()));
+        logger.info("Password updated for user with ID: {}", user.getId());
         return null;
     }
 
