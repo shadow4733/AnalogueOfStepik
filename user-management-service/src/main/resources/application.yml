@@ -2,7 +2,7 @@ spring:
   application:
     name: user-managment-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-management-service
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/user-management-service}
     username: postgres
     password: 123
   mail:
