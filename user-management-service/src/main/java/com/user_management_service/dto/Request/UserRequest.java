@@ -1,4 +1,4 @@
-package com.user_management_service.dto;
+package com.user_management_service.dto.Request;
 
 public record UserRequest(
         String username,
