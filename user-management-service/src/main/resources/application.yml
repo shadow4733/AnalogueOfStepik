@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: user-managment-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user-management-service
+    username: postgres
+    password: 123
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bogdan.rubanik28@gmail.com
+    password: "jhzd snnw kpre uksf"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
