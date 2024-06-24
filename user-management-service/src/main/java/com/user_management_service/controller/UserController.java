@@ -1,8 +1,10 @@
 package com.user_management_service.controller;
 
 import com.user_management_service.dto.Request.AuthenticationRequest;
+import com.user_management_service.dto.Request.UpdatePasswordResponse;
 import com.user_management_service.dto.Response.AuthenticationResponse;
 import com.user_management_service.dto.Request.UserRequest;
+import com.user_management_service.dto.Response.UpdatePasswordRequest;
 import com.user_management_service.exception.EmailHasNotBeenConfirmed;
 import com.user_management_service.exception.PasswordIsIncorrect;
 import com.user_management_service.exception.UsernameDoesNotExist;
@@ -53,6 +55,12 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<UpdatePasswordResponse> resetPassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        UpdatePasswordResponse updatePasswordResponse = userService.updateUserPasswordById(updatePasswordRequest);
+        return ResponseEntity.ok(updatePasswordResponse);
     }
 
 }

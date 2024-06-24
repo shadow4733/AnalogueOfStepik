@@ -54,13 +54,22 @@ public class UserServiceImpl implements UserService {
         user.setCratedAt(LocalDateTime.now());
         String emailToken = UUID.randomUUID().toString();
         user.setEmailToken(emailToken);
+        String resetToken = UUID.randomUUID().toString();
+        user.setResetPasswordToken(resetToken);
 
         emailService.sendEmailVerificationToken(user);
 
         userRepository.save(user);
 
         logger.info("User registered");
-        return null;
+        return new UserResponse(
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().toString(),
+                user.isEmailVerified(),
+                user.getEmailToken(),
+                user.getCratedAt().toString()
+        );
     }
 
     @Override
@@ -85,21 +94,38 @@ public class UserServiceImpl implements UserService {
         }
 
         logger.info("User authenticated");
-        return null;
+        return new AuthenticationResponse(
+                user.getUsername(),
+                user.getPassword()
+        );
     }
 
     @Override
     public UpdatePasswordResponse updateUserPasswordById(UpdatePasswordRequest updatePasswordRequest) {
         User user = userRepository.findById(updatePasswordRequest.userId())
                 .orElseThrow(() -> new UserNotFoundException(updatePasswordRequest.userId()));
-        logger.info("Password updated for user with ID: {}", user.getId());
-        return null;
-    }
 
-    @Override
-    public UserResponse updateUserEmailById(UserRequest userRequest) {
-        logger.info("Email updated");
-        return null;
+        if (!user.getResetPasswordToken().equals(updatePasswordRequest.token())) {
+            throw new InvalidResetPasswordTokenException();
+        } else if (!passwordEncoder.matches(updatePasswordRequest.currentPassword(), user.getPassword())) {
+            throw new IncorrectCurrentPasswordException();
+        } else if (!passwordValidator.isPasswordValid(updatePasswordRequest.newPassword())){
+            throw new WeakPasswordException(updatePasswordRequest.newPassword());
+        }
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.newPassword()));
+
+        user.setResetPasswordToken(null);
+
+        userRepository.save(user);
+
+        logger.info("Password updated for user with ID: {}", user.getId());
+
+        return new UpdatePasswordResponse(
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().toString()
+        );
     }
 
     @Override

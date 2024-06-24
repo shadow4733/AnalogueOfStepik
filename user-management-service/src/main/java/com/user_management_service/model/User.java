@@ -22,6 +22,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String emailToken;
+    private String resetPasswordToken;
     private boolean emailVerified;
     private LocalDateTime cratedAt;
 }
