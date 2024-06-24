@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: course-management-service
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/course-management-service}
+    username: postgres
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8081

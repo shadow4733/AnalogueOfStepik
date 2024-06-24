@@ -1,3 +1,4 @@
 rootProject.name = 'Platform'
 
-include("user-management-service")
+include("user-management-service",
+        "course-management-service")
