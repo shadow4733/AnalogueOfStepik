@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface EmailService {
 
-    void sendEmailVerification(User user);
-    void sendAccountDeletion(User user);
+    void sendEmailVerificationToken(User user);
 
 }

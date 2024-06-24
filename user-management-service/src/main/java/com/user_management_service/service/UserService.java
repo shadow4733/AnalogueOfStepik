@@ -16,7 +16,6 @@ public interface UserService {
     UserResponse registerUser(UserRequest userRequest);
     AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest);
     UpdatePasswordResponse updateUserPasswordById(UpdatePasswordRequest updatePasswordRequest);
-    UserResponse updateUserEmailById(UserRequest userRequest);
     void deleteUser(UUID id);
     void confirmEmail(String token);
     UserRequest getUser(UUID id);

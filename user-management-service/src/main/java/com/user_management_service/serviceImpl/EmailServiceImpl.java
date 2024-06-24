@@ -3,14 +3,13 @@ package com.user_management_service.serviceImpl;
 import com.user_management_service.model.User;
 import com.user_management_service.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 
