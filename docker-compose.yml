@@ -1,1 +1,43 @@
 version: '3'
+
+services:
+
+  user-management:
+    build:
+      context: ./user-management-service
+      dockerfile: Dockerfile
+    depends_on:
+      - db_user_management
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db_user_management:5432/user-management
+
+  course-management:
+    build:
+      context: ./course-management-service
+      dockerfile: Dockerfile
+    depends_on:
+      - db_course_management
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db_course_management:5432/course-management
+
+  db_user_management:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: user-management
+    ports:
+      - "5432:5432"
+
+  db_course_management:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: course-management
+    ports:
+      - "5433:5433"
