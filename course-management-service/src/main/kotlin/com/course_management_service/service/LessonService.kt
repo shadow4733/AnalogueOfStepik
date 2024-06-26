@@ -6,9 +6,8 @@ import java.util.*
 
 
 interface LessonService {
-    fun getAllLessonsByCourse(courseId: UUID?): List<LessonResponse?>?
     fun getLessonById(lessonId: UUID?): LessonResponse?
-    fun createLesson(lessonRequest: LessonRequest?, courseId: UUID?): LessonResponse?
+    fun createLesson(lessonRequest: LessonRequest, courseId: UUID?): LessonResponse?
     fun updateLesson(lessonId: UUID?, lessonRequest: LessonRequest?): LessonResponse?
     fun deleteLesson(lessonId: UUID?)
 }

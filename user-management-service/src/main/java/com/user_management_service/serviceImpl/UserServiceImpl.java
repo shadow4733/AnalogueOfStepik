@@ -6,6 +6,7 @@ import com.user_management_service.dto.Response.AuthenticationResponse;
 import com.user_management_service.dto.Request.UserRequest;
 import com.user_management_service.dto.Response.UpdatePasswordRequest;
 import com.user_management_service.dto.Response.UserResponse;
+import com.common.dto.UserRegisteredEvent;
 import com.user_management_service.exception.*;
 import com.user_management_service.model.User;
 import com.user_management_service.model.enums.Role;
@@ -15,6 +16,7 @@ import com.user_management_service.serviceImpl.utils.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final EmailServiceImpl emailService;
     private final PasswordEncoder passwordEncoder;
     private final PasswordValidator passwordValidator;
+    private final KafkaTemplate<String, UserRegisteredEvent> kafkaTemplate;
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -63,12 +66,13 @@ public class UserServiceImpl implements UserService {
 
         logger.info("User registered");
         return new UserResponse(
+                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getRole().toString(),
                 user.isEmailVerified(),
                 user.getEmailToken(),
-                user.getCratedAt().toString()
+                user.getCratedAt()
         );
     }
 
@@ -76,6 +80,10 @@ public class UserServiceImpl implements UserService {
     public void confirmEmail(String token) {
         User user = userRepository.findByEmailToken(token);
         user.setEmailVerified(true);
+
+        UserRegisteredEvent event = new UserRegisteredEvent(user.getId(),user.getUsername(),user.getEmail());
+        kafkaTemplate.send("user-registered",event);
+
         user.setEmailToken(null);
         userRepository.save(user);
         logger.info("User email confirmed");
@@ -95,6 +103,7 @@ public class UserServiceImpl implements UserService {
 
         logger.info("User authenticated");
         return new AuthenticationResponse(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword()
         );
@@ -105,7 +114,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(updatePasswordRequest.userId())
                 .orElseThrow(() -> new UserNotFoundException(updatePasswordRequest.userId()));
 
-        if (!user.getResetPasswordToken().equals(updatePasswordRequest.token())) {
+        if (!user.getResetPasswordToken().equals(updatePasswordRequest.resetPasswordToken())) {
             throw new InvalidResetPasswordTokenException();
         } else if (!passwordEncoder.matches(updatePasswordRequest.currentPassword(), user.getPassword())) {
             throw new IncorrectCurrentPasswordException();
@@ -122,6 +131,7 @@ public class UserServiceImpl implements UserService {
         logger.info("Password updated for user with ID: {}", user.getId());
 
         return new UpdatePasswordResponse(
+                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getRole().toString()

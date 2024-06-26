@@ -10,7 +10,7 @@ class SwaggerConfig {
     fun customOpenApi(): GroupedOpenApi {
         return GroupedOpenApi.builder()
             .group("user-management-api")
-            .packagesToScan("com.course_management_service")
+            .packagesToScan("com.course_management_service.controller")
             .build()
     }
 }
