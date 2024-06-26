@@ -1,18 +1,22 @@
 package com.course_management_service.service
 
 import com.course_management_service.dto.request.CourseRequest
+import com.course_management_service.dto.request.LessonRequest
+import com.course_management_service.dto.request.UpdateCourseInfoRequest
 import com.course_management_service.dto.response.CourseResponse
+import com.course_management_service.dto.response.LessonResponse
+import com.course_management_service.model.Course
+import com.course_management_service.model.Lesson
 import java.util.*
 
 
 interface CourseService {
-    fun getAllCourses(): List<CourseResponse?>?
-    fun getCourseById(id: UUID?): CourseResponse?
-    fun getCoursesByAuthorId(authorId: UUID?): List<CourseResponse?>?
-    fun addCourseToFavorites(userId: UUID?, courseId: UUID?)
-    fun deleteCourseFromFavorites(userId: UUID?, courseId: UUID?)
-    fun createCourse(courseRequest: CourseRequest?): CourseResponse?
-    fun updateCourse(id: UUID?, courseRequest: CourseRequest?): CourseResponse?
-    fun deleteCourse(id: UUID?)
+    fun addCourseToFavorites(userId: UUID, courseId: UUID)
+    fun getFavoriteCourses(userId: UUID): List<CourseResponse>
+    fun deleteCourseFromFavorites(userId: UUID, courseId: UUID)
+    fun getCourseLessons(courseId: UUID): List<Lesson>?
+    fun createCourse(courseRequest: CourseRequest): Course
+    fun updateCourseInfo(id: UUID, updateCourseInfoRequest: UpdateCourseInfoRequest): Course?
+    fun deleteCourse(id: UUID)
 }
 

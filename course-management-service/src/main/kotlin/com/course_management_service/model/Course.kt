@@ -8,14 +8,22 @@ import java.util.UUID
 data class Course(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private val courseId: UUID,
-    private val title: String?,
-    private val keywords: String,
-    private val description: String,
-    private val price: Double,
-    private val author: String,
-    private val informationAboutAuthor: String,
-    private val coverImageUrl: String,
+    @Column(name = "course_id")
+    val courseId: UUID,
+    @Column(name = "title")
+    var title: String,
+    @Column(name = "keywords")
+    var keywords: List<String>,
+    @Column(name = "description")
+    var description: String,
+    @Column(name = "price")
+    var price: Double,
+    @Column(name = "author")
+    var author: String,
+    @Column(name = "author_id")
+    val authorId: UUID,
+    @Column(name = "cover_image_url")
+    var coverImageUrl: String,
     @OneToMany(mappedBy = "course", cascade = [CascadeType.ALL], orphanRemoval = true)
-    private val lessons: List<Lesson>
+    var lessons: List<Lesson>
 )

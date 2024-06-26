@@ -7,4 +7,5 @@ import java.util.UUID
 
 @Repository
 interface CourseRepository: JpaRepository<Course, UUID> {
+    fun findByAuthorId(authorId: UUID): List<Course>
 }
