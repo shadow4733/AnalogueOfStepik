@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record UpdatePasswordRequest(
         UUID userId,
-        String token,
+        String resetPasswordToken,
         String currentPassword,
         String newPassword
 ) {
