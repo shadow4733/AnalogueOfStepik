@@ -8,11 +8,13 @@ import java.util.*
 data class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private val taskId: UUID,
-    private val title: String,
-    private val description: String,
+    @Column(name = "task_id")
+    val taskId: UUID,
+    @Column(name = "title")
+    val title: String,
+    @Column(name = "description")
+    val description: String,
     @ManyToOne
     @JoinColumn(name = "lesson_id")
-    private val lesson: Lesson
-
+    val lesson: Lesson
 )

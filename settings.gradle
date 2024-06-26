@@ -1,4 +1,6 @@
 rootProject.name = 'Platform'
 
 include("user-management-service",
-        "course-management-service")
+        "course-management-service",
+        "common-dto")
+
