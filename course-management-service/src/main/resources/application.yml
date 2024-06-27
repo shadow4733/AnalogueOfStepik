@@ -15,5 +15,10 @@ spring:
       auto-offset-reset: earliest
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  cache:
+    type: redis
+    redis:
+      host: localhost
+      port: 6379
 server:
   port: 8081
