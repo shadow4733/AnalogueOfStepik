@@ -1,5 +1,6 @@
 package com.course_management_service.service
 
+import com.course_management_service.dto.request.CourseCreatedRequest
 import com.course_management_service.dto.request.CourseRequest
 import com.course_management_service.dto.request.LessonRequest
 import com.course_management_service.dto.request.UpdateCourseInfoRequest
@@ -15,7 +16,7 @@ interface CourseService {
     fun getFavoriteCourses(userId: UUID): List<CourseResponse>
     fun deleteCourseFromFavorites(userId: UUID, courseId: UUID)
     fun getCourseLessons(courseId: UUID): List<Lesson>?
-    fun createCourse(courseRequest: CourseRequest): Course
+    fun createCourse(courseRequest: CourseCreatedRequest): Course
     fun updateCourseInfo(id: UUID, updateCourseInfoRequest: UpdateCourseInfoRequest): Course?
     fun deleteCourse(id: UUID)
 }

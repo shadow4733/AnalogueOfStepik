@@ -1,5 +1,6 @@
 package com.course_management_service.controller
 
+import com.course_management_service.dto.request.CourseCreatedRequest
 import com.course_management_service.dto.request.CourseRequest
 import com.course_management_service.dto.request.LessonRequest
 import com.course_management_service.dto.request.UpdateCourseInfoRequest
@@ -40,7 +41,7 @@ class CourseController(private val courseService: CourseService) {
     }
 
     @PostMapping("/create")
-    fun createCourse(@RequestBody courseRequest: CourseRequest): ResponseEntity<Course> {
+    fun createCourse(@RequestBody courseRequest: CourseCreatedRequest): ResponseEntity<Course> {
         val createdCourse = courseService.createCourse(courseRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCourse)
     }

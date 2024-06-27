@@ -11,7 +11,11 @@ data class User(
     val username: String,
     val email: String,
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "enrolled_courses", joinColumns = [JoinColumn(name = "user_id")])
+    @Column(name = "course_id")
     val enrolledCourses: MutableSet<UUID> = mutableSetOf(),
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "favorite_courses", joinColumns = [JoinColumn(name = "user_id")])
+    @Column(name = "course_id")
     val favoriteCourses: MutableSet<UUID> = mutableSetOf()
 )

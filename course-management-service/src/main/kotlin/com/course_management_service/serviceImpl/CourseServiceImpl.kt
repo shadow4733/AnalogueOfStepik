@@ -1,5 +1,6 @@
 package com.course_management_service.serviceImpl
 
+import com.course_management_service.dto.request.CourseCreatedRequest
 import com.course_management_service.dto.request.CourseRequest
 import com.course_management_service.dto.request.UpdateCourseInfoRequest
 import com.course_management_service.dto.response.CourseResponse
@@ -9,6 +10,8 @@ import com.course_management_service.repository.CourseRepository
 import com.course_management_service.repository.UserRepository
 import com.course_management_service.service.CourseService
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -20,6 +23,7 @@ class CourseServiceImpl(
 
     private val logger = LoggerFactory.getLogger(CourseService::class.java)
 
+    @CacheEvict(value = ["favoriteCourses"], key = "#userId")
     override fun addCourseToFavorites(userId: UUID, courseId: UUID) {
         logger.info("Adding course with id: {} to favorites for user with id: {}", courseId, userId)
 
@@ -35,6 +39,7 @@ class CourseServiceImpl(
         userRepository.save(user)
     }
 
+    @Cacheable(value = ["favoriteCourses"], key = "#userId")
     override fun getFavoriteCourses(userId: UUID): List<CourseResponse> {
         logger.info("Getting favorite courses for user with id: {}", userId)
 
@@ -43,12 +48,16 @@ class CourseServiceImpl(
 
         val favoriteCoursesIds = user.favoriteCourses
 
-        val favoriteCourses = courseRepository.findAllById(favoriteCoursesIds)
-            .map { CourseResponse.from(it) }
+        if (favoriteCoursesIds.isNullOrEmpty()) {
+            return emptyList()
+        }
+
+        val favoriteCourses = favoriteCoursesIds.mapNotNull { id ->
+            courseRepository.findById(id).orElse(null)?.let { CourseResponse.from(it) }
+        }
 
         return favoriteCourses
     }
-
 
     override fun getCourseLessons(courseId: UUID): List<Lesson>? {
         logger.info("Getting course lessons for course with id: {}", courseId)
@@ -58,6 +67,7 @@ class CourseServiceImpl(
             .orElse(null)
     }
 
+    @CacheEvict(value = ["favoriteCourses"], key = "#userId")
     override fun deleteCourseFromFavorites(userId: UUID, courseId: UUID) {
         logger.info("Deleting course with id: {} from favorites for user with id: {}", courseId, userId)
 
@@ -74,7 +84,7 @@ class CourseServiceImpl(
         logger.info("Course with id: {} deleted from favorites for user with id: {}", courseId, userId)
     }
 
-    override fun createCourse(courseRequest: CourseRequest): Course {
+    override fun createCourse(courseRequest: CourseCreatedRequest): Course {
         logger.info("Creating course: {}", courseRequest)
 
         val course = Course(
@@ -91,6 +101,7 @@ class CourseServiceImpl(
 
         return courseRepository.save(course)
     }
+
 
     override fun updateCourseInfo(id: UUID, updateCourseInfoRequest: UpdateCourseInfoRequest): Course? {
         logger.info("Updating course with id: {}", id)
