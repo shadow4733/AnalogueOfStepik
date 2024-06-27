@@ -9,7 +9,7 @@ spring:
     hibernate:
       ddl-auto: update
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
     consumer:
       group-id: course-management-service
       auto-offset-reset: earliest
@@ -18,7 +18,7 @@ spring:
   cache:
     type: redis
     redis:
-      host: localhost
+      host: ${REDIS_HOST:redis}
       port: 6379
 server:
   port: 8081

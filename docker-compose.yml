@@ -8,10 +8,13 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - db_user_management
+      - kafka
     ports:
       - "8080:8080"
     environment:
       DATABASE_URL: jdbc:postgresql://db_user_management:5432/user-management
+      KAFKA_URL: kafka:9092
+      REDIS_HOST: redis
 
   course-management:
     build:
@@ -19,10 +22,13 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - db_course_management
+      - kafka
     ports:
       - "8081:8081"
     environment:
       DATABASE_URL: jdbc:postgresql://db_course_management:5432/course-management
+      KAFKA_URL: kafka:9092
+      REDIS_HOST: redis
 
   db_user_management:
     image: postgres:latest
@@ -41,3 +47,26 @@ services:
       POSTGRES_DB: course-management
     ports:
       - "5433:5433"
+
+  zookeeper:
+    image: 'confluentinc/cp-zookeeper:latest'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: 'confluentinc/cp-kafka:latest'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  redis:
+    image: 'redis:latest'
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - 'redis_data:/data'
+
+volumes:
+  redis_data:
