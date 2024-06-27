@@ -34,7 +34,6 @@ dependencies {
 dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-
 }
 
 //database
@@ -42,6 +41,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.hibernate.orm:hibernate-core:6.5.2.Final")
+}
+
+//redis
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 }
 
 dependencies {
